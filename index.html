@@ -375,29 +375,6 @@
       border-left: 3px solid var(--dorado);
     }
 
-    .precio-pack {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(232,184,75,0.08);
-      border: 1px solid rgba(232,184,75,0.2);
-      border-radius: 4px;
-      padding: 4px 8px;
-    }
-
-    .pack-label {
-      font-size: 11px;
-      color: var(--dorado);
-    }
-
-    .pack-valor {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--dorado);
-    }
-
-    /* ── NO RESULTS ── */
     .no-results {
       text-align: center;
       padding: 60px 24px;
@@ -442,10 +419,6 @@
       color: #555;
     }
 
-    /* ── HIDDEN ── */
-    .hidden { display: none !important; }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       header { padding: 14px 16px; }
       .logo-nombre { font-size: 22px; }
@@ -508,7 +481,7 @@
 </div>
 
 <div class="contenido" id="contenido">
-  <!-- Renderizado por JS -->
+  <p style="text-align: center; padding: 40px;">Cargando catálogo...</p>
 </div>
 
 <footer>
@@ -521,149 +494,51 @@
 </footer>
 
 <script>
-// ── BASE DE DATOS DE PRODUCTOS ──
-// precio_unidad: precio por unidad o precio del pack según cómo venden
-// precio_pack: precio total del pack (si aplica)
-// pack_desc: descripción del pack (ej: "x24 unidades")
-const PRODUCTOS = [
-  // CERVEZAS 330cc
-  { id:1, cat:"Cervezas", subcat:"330cc / Porrones", nombre:"Corona 330cc", precio_unidad:2373, pack_desc:null, precio_pack:null },
+// ── ESTADO GLOBAL ──
+let PRODUCTOS = [];
+let catActiva = 'todos';
+let busqueda = '';
 
-  // CERVEZAS 473cc LATA
-  { id:2, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Andes Rubia e IPA 473cc", precio_unidad:1866, pack_desc:"x24", precio_pack:null },
-  { id:3, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Quilmes 473cc", precio_unidad:1794, pack_desc:"x24", precio_pack:null },
-  { id:4, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Budweiser 473cc", precio_unidad:1810, pack_desc:"x24", precio_pack:null },
-  { id:5, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Heineken 473cc", precio_unidad:2614, pack_desc:"x24", precio_pack:null },
-  { id:6, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Imperial 473cc", precio_unidad:1693, pack_desc:"x24", precio_pack:null },
-  { id:7, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Schneider 473cc", precio_unidad:1589, pack_desc:"x24", precio_pack:null },
-  { id:8, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Miller 473cc", precio_unidad:1922, pack_desc:"x24", precio_pack:null },
-  { id:9, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Brahma Chopp 473cc", precio_unidad:1820, pack_desc:"x24", precio_pack:null },
-  { id:10, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Stella Artois 473cc", precio_unidad:2256, pack_desc:"x24", precio_pack:null },
-  { id:11, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Fernet 1882 473cc", precio_unidad:1643, pack_desc:"x6", precio_pack:null },
-  { id:12, cat:"Cervezas", subcat:"473cc Lata x24", nombre:"Isenbeck 473cc", precio_unidad:1128, pack_desc:"x6", precio_pack:null },
+// ── CARGA DINÁMICA DESDE EL JSON DE n8n ──
+async function cargarDatos() {
+  try {
+    // Buscamos el archivo actualizado por n8n en el repo (cache-busting para evitar precios viejos)
+    const response = await fetch('./precios.json?v=' + new Date().getTime());
+    const datosNuevos = await response.json();
+    
+    // Mapeamos los datos del Excel al formato del frontend
+    // Nota: Aquí podrías agregar lógica para autodetectar la categoría
+    PRODUCTOS = datosNuevos.map(p => ({
+      id: p.codigo,
+      cat: "Cervezas", // Por ahora asignamos una por defecto
+      nombre: p.descripcion,
+      precio_unidad: p.precio_venta
+    }));
 
-  // CERVEZAS 710cc
-  { id:13, cat:"Cervezas", subcat:"710cc", nombre:"Corona 710cc", precio_unidad:4408, pack_desc:"x12", precio_pack:null },
-  { id:14, cat:"Cervezas", subcat:"710cc", nombre:"Corona 330cc", precio_unidad:2373, pack_desc:null, precio_pack:null },
-  { id:15, cat:"Cervezas", subcat:"710cc", nombre:"Miller 710cc", precio_unidad:3249, pack_desc:null, precio_pack:null },
-  { id:16, cat:"Cervezas", subcat:"710cc", nombre:"Brahma 710cc", precio_unidad:2583, pack_desc:"x18", precio_pack:null },
-  { id:17, cat:"Cervezas", subcat:"710cc", nombre:"Schneider 710cc", precio_unidad:2384, pack_desc:"x24", precio_pack:null },
-  { id:18, cat:"Cervezas", subcat:"710cc", nombre:"Heineken 710cc", precio_unidad:3774, pack_desc:"x24", precio_pack:null },
-  { id:19, cat:"Cervezas", subcat:"710cc", nombre:"Imperial Golden 710cc", precio_unidad:2419, pack_desc:"x24", precio_pack:null },
-  { id:20, cat:"Cervezas", subcat:"Varios", nombre:"361 Lager 1L x6", precio_unidad:1799, pack_desc:"x6", precio_pack:null },
-
-  // GASEOSAS
-  { id:21, cat:"Gaseosas", subcat:"Coca-Cola", nombre:"Coca/Fanta/Sprite 500cc", precio_unidad:1300, pack_desc:"x6", precio_pack:7380 },
-  { id:22, cat:"Gaseosas", subcat:"Coca-Cola", nombre:"Coca/Fanta/Sprite 1.75L", precio_unidad:3521, pack_desc:"x8", precio_pack:28168 },
-  { id:23, cat:"Gaseosas", subcat:"Coca-Cola", nombre:"Coca/Sprite/Fanta 2.25L", precio_unidad:4152, pack_desc:"x8", precio_pack:33216 },
-  { id:24, cat:"Gaseosas", subcat:"Coca-Cola", nombre:"Coca Cola/Sprite Lata", precio_unidad:1107, pack_desc:"x6", precio_pack:6642 },
-  { id:25, cat:"Gaseosas", subcat:"Pepsi", nombre:"Pepsi/7Up/Paso de los Toros 500cc", precio_unidad:935, pack_desc:"x6", precio_pack:5610 },
-  { id:26, cat:"Gaseosas", subcat:"Pepsi", nombre:"Pepsi/7Up/Paso de los Toros 1500cc", precio_unidad:2214, pack_desc:"x6", precio_pack:13284 },
-  { id:27, cat:"Gaseosas", subcat:"Pepsi", nombre:"Pepsi Seven Lata", precio_unidad:903, pack_desc:"x6", precio_pack:5418 },
-  { id:28, cat:"Gaseosas", subcat:"Otras", nombre:"Placer 1.5L", precio_unidad:1026, pack_desc:"x6", precio_pack:null },
-  { id:29, cat:"Gaseosas", subcat:"Otras", nombre:"Placer 500cc", precio_unidad:534, pack_desc:"x12", precio_pack:null },
-  { id:30, cat:"Gaseosas", subcat:"Otras", nombre:"Levité 1.5L", precio_unidad:1502, pack_desc:"x6", precio_pack:null },
-  { id:31, cat:"Gaseosas", subcat:"Otras", nombre:"Levité 500cc", precio_unidad:911, pack_desc:"x12", precio_pack:null },
-  { id:32, cat:"Gaseosas", subcat:"Otras", nombre:"Cunnington 1.5L", precio_unidad:1476, pack_desc:"x8", precio_pack:null },
-  { id:33, cat:"Gaseosas", subcat:"Otras", nombre:"Cunnington 500cc Tónica/Pomelo", precio_unidad:848, pack_desc:"x8", precio_pack:null },
-  { id:34, cat:"Gaseosas", subcat:"Otras", nombre:"Powerade 500cc", precio_unidad:1230, pack_desc:"x8", precio_pack:null },
-  { id:35, cat:"Gaseosas", subcat:"Otras", nombre:"Baggio 1L Naranja/Multifruta", precio_unidad:null, pack_desc:null, precio_pack:null },
-  { id:36, cat:"Gaseosas", subcat:"Otras", nombre:"Baggio 200ml x18", precio_unidad:516, pack_desc:"x18", precio_pack:null },
-  { id:37, cat:"Gaseosas", subcat:"Otras", nombre:"Manaos 2.25L Cola/Pomelo/Lima", precio_unidad:1502, pack_desc:null, precio_pack:null },
-  { id:38, cat:"Gaseosas", subcat:"Otras", nombre:"Fernando Forte 1L x6", precio_unidad:1091, pack_desc:"x6", precio_pack:null },
-  { id:39, cat:"Gaseosas", subcat:"Otras", nombre:"Cepita 1L x6 Durazno/Naranja", precio_unidad:2103, pack_desc:"x6", precio_pack:null },
-
-  // AGUAS
-  { id:40, cat:"Aguas", subcat:null, nombre:"Bidón Arroyito 6L", precio_unidad:1521, pack_desc:null, precio_pack:null },
-  { id:41, cat:"Aguas", subcat:null, nombre:"Villavicencio 1.5L", precio_unidad:1404, pack_desc:"x6", precio_pack:7716 },
-  { id:42, cat:"Aguas", subcat:null, nombre:"Manaos 2L", precio_unidad:910, pack_desc:"x6", precio_pack:5460 },
-  { id:43, cat:"Aguas", subcat:null, nombre:"Sierra de los Padres 500cc", precio_unidad:618, pack_desc:"x12", precio_pack:7416 },
-  { id:44, cat:"Aguas", subcat:null, nombre:"Manaos 600cc", precio_unidad:390, pack_desc:"x12", precio_pack:4680 },
-  { id:45, cat:"Aguas", subcat:null, nombre:"Villavicencio 500cc", precio_unidad:965, pack_desc:"x12", precio_pack:10600 },
-
-  // VINOS
-  { id:46, cat:"Vinos", subcat:"Malbec", nombre:"Muñeco Rebelde Malbec", precio_unidad:2812, pack_desc:null, precio_pack:null },
-  { id:47, cat:"Vinos", subcat:"Malbec", nombre:"Alma Mora Malbec", precio_unidad:4510, pack_desc:null, precio_pack:null },
-  { id:48, cat:"Vinos", subcat:"Malbec", nombre:"Quara Malbec", precio_unidad:1849, pack_desc:null, precio_pack:null },
-  { id:49, cat:"Vinos", subcat:"Malbec", nombre:"Balbo Tinto Argentino", precio_unidad:2727, pack_desc:null, precio_pack:null },
-  { id:50, cat:"Vinos", subcat:"Malbec", nombre:"Dada Malbec", precio_unidad:4101, pack_desc:null, precio_pack:null },
-  { id:51, cat:"Vinos", subcat:"Malbec", nombre:"Trumpeter Malbec", precio_unidad:7694, pack_desc:null, precio_pack:null },
-  { id:52, cat:"Vinos", subcat:"Malbec", nombre:"Nicasia Malbec", precio_unidad:6212, pack_desc:null, precio_pack:null },
-  { id:53, cat:"Vinos", subcat:"Otros", nombre:"Norton Cosecha Tardía", precio_unidad:4305, pack_desc:null, precio_pack:null },
-  { id:54, cat:"Vinos", subcat:"Otros", nombre:"Termidor Tinto/Blanco", precio_unidad:1661, pack_desc:"x12", precio_pack:null },
-
-  // WHISKY
-  { id:55, cat:"Whisky", subcat:null, nombre:"Red Label 750cc", precio_unidad:29492, pack_desc:null, precio_pack:null },
-  { id:56, cat:"Whisky", subcat:null, nombre:"Black Label 750cc", precio_unidad:48585, pack_desc:null, precio_pack:null },
-  { id:57, cat:"Whisky", subcat:null, nombre:"Jack Daniel's 750cc", precio_unidad:45371, pack_desc:null, precio_pack:null },
-
-  // FERNET
-  { id:58, cat:"Fernet", subcat:null, nombre:"Fernet Branca 1L", precio_unidad:20865, pack_desc:"x unidad", precio_pack:null },
-  { id:59, cat:"Fernet", subcat:null, nombre:"Fernet Branca 750cc", precio_unidad:15620, pack_desc:"x unidad", precio_pack:null },
-  { id:60, cat:"Fernet", subcat:null, nombre:"Fernet Branca 450cc", precio_unidad:10358, pack_desc:null, precio_pack:null },
-  { id:61, cat:"Fernet", subcat:null, nombre:"Buhero Negro 700cc", precio_unidad:8713, pack_desc:null, precio_pack:null },
-
-  // GIN
-  { id:62, cat:"Gin", subcat:null, nombre:"Brighton 700cc", precio_unidad:7713, pack_desc:null, precio_pack:null },
-  { id:63, cat:"Gin", subcat:null, nombre:"Spirito Blue London Dry 700cc", precio_unidad:11850, pack_desc:null, precio_pack:null },
-  { id:64, cat:"Gin", subcat:null, nombre:"Gordon's 750cc", precio_unidad:10738, pack_desc:null, precio_pack:null },
-
-  // VODKA
-  { id:65, cat:"Vodka", subcat:null, nombre:"Sernova Saborizado", precio_unidad:6309, pack_desc:null, precio_pack:null },
-  { id:66, cat:"Vodka", subcat:null, nombre:"SKY Saborizado", precio_unidad:9159, pack_desc:null, precio_pack:null },
-  { id:67, cat:"Vodka", subcat:null, nombre:"SKY Regular", precio_unidad:8872, pack_desc:null, precio_pack:null },
-  { id:68, cat:"Vodka", subcat:null, nombre:"Absolut Regular", precio_unidad:21287, pack_desc:null, precio_pack:null },
-  { id:69, cat:"Vodka", subcat:null, nombre:"Dr Lemon 1L", precio_unidad:3041, pack_desc:null, precio_pack:null },
-  { id:70, cat:"Vodka", subcat:null, nombre:"Absolut Saborizado", precio_unidad:21287, pack_desc:null, precio_pack:null },
-  { id:71, cat:"Vodka", subcat:null, nombre:"Smirnoff Regular", precio_unidad:7326, pack_desc:null, precio_pack:null },
-  { id:72, cat:"Vodka", subcat:null, nombre:"Smirnoff Sabores", precio_unidad:8145, pack_desc:null, precio_pack:null },
-  { id:73, cat:"Vodka", subcat:null, nombre:"Smirnoff Ice Red Berries 473cc", precio_unidad:2604, pack_desc:"x24", precio_pack:null },
-  { id:74, cat:"Vodka", subcat:null, nombre:"Smirnoff Ice Citric 473cc", precio_unidad:2604, pack_desc:"x24", precio_pack:null },
-  { id:75, cat:"Vodka", subcat:null, nombre:"Smirnoff Ice Green Apple 473cc", precio_unidad:2604, pack_desc:"x24", precio_pack:null },
-
-  // ENERGIZANTES
-  { id:76, cat:"Energizantes", subcat:null, nombre:"Speed Unlimited Chico x24", precio_unidad:1188, pack_desc:"x24", precio_pack:null },
-  { id:77, cat:"Energizantes", subcat:null, nombre:"Speed XL x12", precio_unidad:1959, pack_desc:"x12", precio_pack:null },
-
-  // LICORES / ESPUMANTES
-  { id:78, cat:"Licores", subcat:"Espumantes", nombre:"Chandon E. Brut/Delice/Apertiff 750cc", precio_unidad:17200, pack_desc:"x unidad", precio_pack:null },
-  { id:79, cat:"Licores", subcat:"Espumantes", nombre:"Federico Extra Dulce/Brut x caja", precio_unidad:4376, pack_desc:"x caja", precio_pack:null },
-  { id:80, cat:"Licores", subcat:"Espumantes", nombre:"Mumm Extra Brut x unidad", precio_unidad:7780, pack_desc:"x unidad", precio_pack:null },
-  { id:81, cat:"Licores", subcat:"Otros", nombre:"Cinzano Rosso 1000cc", precio_unidad:6918, pack_desc:null, precio_pack:null },
-  { id:82, cat:"Licores", subcat:"Otros", nombre:"Gancia 980cc", precio_unidad:6396, pack_desc:null, precio_pack:null },
-  { id:83, cat:"Licores", subcat:"Otros", nombre:"Malibu", precio_unidad:12020, pack_desc:null, precio_pack:null },
-  { id:84, cat:"Licores", subcat:"Otros", nombre:"New Age x unidad", precio_unidad:3219, pack_desc:"x unidad", precio_pack:null },
-  { id:85, cat:"Licores", subcat:"Otros", nombre:"Campari 1L", precio_unidad:13466, pack_desc:null, precio_pack:null },
-
-  // PETACAS
-  { id:86, cat:"Licores", subcat:"Petacas", nombre:"Tres Plumas 200cc Petaca", precio_unidad:1743, pack_desc:"surtido", precio_pack:null },
-  { id:87, cat:"Licores", subcat:"Petacas", nombre:"Criadores Petaca", precio_unidad:2091, pack_desc:null, precio_pack:null },
-
-  // SNACKS
-  { id:88, cat:"Snacks", subcat:"Alfajores Marley", nombre:"Alfajor Marley Triple Blanco", precio_unidad:1170, pack_desc:"x16", precio_pack:18720 },
-  { id:89, cat:"Snacks", subcat:"Alfajores Marley", nombre:"Alfajor Marley Simple Blanco", precio_unidad:763, pack_desc:"x20", precio_pack:15260 },
-  { id:90, cat:"Snacks", subcat:"Alfajores Marley", nombre:"Alfajor Marley Triple Negro", precio_unidad:1170, pack_desc:"x16", precio_pack:18720 },
-  { id:91, cat:"Snacks", subcat:"Alfajores Marley", nombre:"Alfajor Marley Simple Negro", precio_unidad:763, pack_desc:"x20", precio_pack:15260 },
-  { id:92, cat:"Snacks", subcat:"Frutos Secos", nombre:"Mix/Nueces/Almendras 50g x10", precio_unidad:1600, pack_desc:"x10", precio_pack:null },
-];
+    render();
+    actualizarFecha();
+  } catch (error) {
+    console.error("Error cargando precios:", error);
+    document.getElementById('contenido').innerHTML = `
+      <div class="no-results">
+        <p>⚠️ Error al sincronizar precios.</p>
+        <p style="font-size: 14px; margin-top: 10px;">Por favor, verifique su conexión o intente más tarde.</p>
+      </div>`;
+  }
+}
 
 // ── UTILS ──
 const fmt = n => n ? '$' + Number(n).toLocaleString('es-AR') : null;
 
-// ── ESTADO ──
-let catActiva = 'todos';
-let busqueda = '';
-
-// ── RENDER ──
+// ── RENDERIZADO ──
 function render() {
   const contenido = document.getElementById('contenido');
   
-  // Filtrar
+  // Filtrado lógico
   let filtrados = PRODUCTOS.filter(p => {
     const matchCat = catActiva === 'todos' || p.cat === catActiva;
     const matchBusq = busqueda === '' || 
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.cat.toLowerCase().includes(busqueda.toLowerCase());
+      p.nombre.toLowerCase().includes(busqueda.toLowerCase());
     return matchCat && matchBusq && p.precio_unidad !== null;
   });
 
@@ -672,18 +547,16 @@ function render() {
     return;
   }
 
-  // Agrupar por categoría
+  // Agrupar por categoría para el diseño de secciones
   const porCategoria = {};
   filtrados.forEach(p => {
     if (!porCategoria[p.cat]) porCategoria[p.cat] = [];
     porCategoria[p.cat].push(p);
   });
 
-  const iconos = {
-    'Cervezas': '🍺', 'Gaseosas': '🥤', 'Aguas': '💧',
-    'Vinos': '🍷', 'Whisky': '🥃', 'Fernet': '🍶',
-    'Gin': '🍸', 'Vodka': '🍹', 'Energizantes': '⚡',
-    'Licores': '🍾', 'Snacks': '🍫'
+  const iconos = { 
+    'Cervezas': '🍺', 'Gaseosas': '🥤', 'Aguas': '💧', 'Vinos': '🍷', 
+    'Whisky': '🥃', 'Fernet': '🍶', 'Gin': '🍸', 'Vodka': '🍹' 
   };
 
   contenido.innerHTML = Object.entries(porCategoria).map(([cat, prods]) => `
@@ -697,18 +570,13 @@ function render() {
       <div class="productos-grid">
         ${prods.map(p => `
           <div class="card">
-            <div class="card-categoria">${p.subcat || p.cat}</div>
+            <div class="card-categoria">${cat}</div>
             <div class="card-nombre">${p.nombre}</div>
             <div class="card-precios">
               <div class="precio-unidad">
-                <span class="precio-label">${p.pack_desc ? 'Pack ' + p.pack_desc : 'Precio'}</span>
+                <span class="precio-label">Precio</span>
                 <span class="precio-valor">${fmt(p.precio_unidad)}</span>
               </div>
-              ${p.precio_pack ? `
-              <div class="precio-pack">
-                <span class="pack-label">Total pack</span>
-                <span class="pack-valor">${fmt(p.precio_pack)}</span>
-              </div>` : ''}
             </div>
           </div>
         `).join('')}
@@ -717,15 +585,14 @@ function render() {
   `).join('');
 }
 
-// ── FECHA ──
+// ── GESTIÓN DE FECHA ──
 function actualizarFecha() {
   const ahora = new Date();
   const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
-  document.getElementById('fecha-update').textContent = 
-    'Actualizado: ' + ahora.toLocaleDateString('es-AR', opciones);
+  document.getElementById('fecha-update').textContent = 'Actualizado: ' + ahora.toLocaleDateString('es-AR', opciones);
 }
 
-// ── EVENTOS ──
+// ── EVENTOS DE INTERFAZ ──
 document.getElementById('filtros').addEventListener('click', e => {
   if (!e.target.classList.contains('filtro-btn')) return;
   document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
@@ -736,7 +603,6 @@ document.getElementById('filtros').addEventListener('click', e => {
 
 document.getElementById('buscador').addEventListener('input', e => {
   busqueda = e.target.value;
-  // Al buscar mostramos todos
   if (busqueda) {
     catActiva = 'todos';
     document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
@@ -745,9 +611,9 @@ document.getElementById('buscador').addEventListener('input', e => {
   render();
 });
 
-// ── INIT ──
-actualizarFecha();
-render();
+// ── INICIALIZACIÓN ──
+cargarDatos();
 </script>
+
 </body>
 </html>
