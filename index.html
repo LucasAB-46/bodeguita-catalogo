@@ -4,431 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Bodeguita de Saraza · Catálogo Mayorista</title>
+  <link rel="icon" href="https://fav.farm/🍷" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --negro: #0a0a0a;
-      --carbon: #141414;
-      --gris-oscuro: #1e1e1e;
-      --gris-medio: #2a2a2a;
-      --gris-borde: #333;
-      --dorado: #e8b84b;
-      --dorado-claro: #f5d078;
-      --blanco: #f0ede8;
-      --blanco-apagado: #b0a89a;
-      --rojo: #c0392b;
+      --negro: #0a0a0a; --carbon: #141414; --gris-oscuro: #1e1e1e;
+      --gris-medio: #2a2a2a; --gris-borde: #333; --dorado: #e8b84b;
+      --dorado-claro: #f5d078; --blanco: #f0ede8; --blanco-apagado: #b0a89a;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--negro); color: var(--blanco); font-family: 'Barlow', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    
+    header { background: var(--carbon); border-bottom: 2px solid var(--dorado); padding: 20px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+    .logo-nombre { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; }
+    .logo-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 4px; color: var(--dorado); text-transform: uppercase; }
+    
+    .badge-mayorista { background: var(--dorado); color: var(--negro); font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 2px; }
+    .btn-contacto { border: 1px solid var(--gris-borde); color: var(--blanco-apagado); padding: 6px 14px; border-radius: 4px; text-decoration: none; transition: 0.2s; }
+    .btn-contacto:hover { border-color: var(--dorado); color: var(--dorado); }
 
-    body {
-      background: var(--negro);
-      color: var(--blanco);
-      font-family: 'Barlow', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    .hero { background: linear-gradient(135deg, var(--carbon) 0%, #0f1a0f 50%, var(--carbon) 100%); padding: 48px 24px; text-align: center; border-bottom: 1px solid var(--gris-borde); }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 8vw, 72px); letter-spacing: 6px; line-height: 0.9; }
+    .hero h1 span { color: var(--dorado); }
+    .actualizado-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(232,184,75,0.1); border: 1px solid rgba(232,184,75,0.3); color: var(--dorado); font-size: 12px; padding: 4px 12px; border-radius: 20px; margin-top: 15px; }
+    .dot-live { width: 6px; height: 6px; background: #4caf50; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    /* ── HEADER ── */
-    header {
-      background: var(--carbon);
-      border-bottom: 2px solid var(--dorado);
-      padding: 20px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
+    .search-bar { padding: 20px 24px; background: var(--carbon); border-bottom: 1px solid var(--gris-borde); }
+    .search-input-wrap { max-width: 600px; margin: 0 auto; position: relative; }
+    .search-input-wrap input { width: 100%; background: var(--gris-oscuro); border: 1px solid var(--gris-borde); color: var(--blanco); padding: 12px 16px; border-radius: 6px; outline: none; }
+    .search-input-wrap input:focus { border-color: var(--dorado); }
 
-    .logo-area {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-    }
+    .filtros-wrap { padding: 16px 24px; background: var(--carbon); border-bottom: 1px solid var(--gris-borde); overflow-x: auto; }
+    .filtros { display: flex; gap: 8px; width: max-content; }
+    .filtro-btn { background: var(--gris-oscuro); border: 1px solid var(--gris-borde); color: var(--blanco-apagado); padding: 7px 16px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+    .filtro-btn.activo { background: var(--dorado); color: var(--negro); border-color: var(--dorado); }
 
-    .logo-nombre {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 3px;
-      color: var(--blanco);
-    }
+    .contenido { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+    .seccion { margin-bottom: 48px; }
+    .seccion-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .seccion-titulo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; }
+    .seccion-linea { flex: 1; height: 1px; background: var(--gris-borde); }
 
-    .logo-sub {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      letter-spacing: 4px;
-      color: var(--dorado);
-      text-transform: uppercase;
-    }
+    .productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .card { background: var(--gris-oscuro); border: 1px solid var(--gris-borde); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .card:hover { border-color: var(--dorado); transform: translateY(-2px); transition: 0.2s; }
+    .card-categoria { font-size: 10px; color: var(--dorado); text-transform: uppercase; font-weight: 700; }
+    .card-nombre { font-size: 17px; font-weight: 700; line-height: 1.2; }
+    .precio-valor { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--blanco); background: var(--gris-medio); padding: 2px 10px; border-radius: 4px; border-left: 3px solid var(--dorado); }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
+    footer { background: var(--carbon); border-top: 2px solid var(--dorado); padding: 28px 24px; text-align: center; font-size: 13px; }
+    .no-results { text-align: center; padding: 60px; color: var(--blanco-apagado); }
 
-    .badge-mayorista {
-      background: var(--dorado);
-      color: var(--negro);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      padding: 4px 10px;
-      border-radius: 2px;
-    }
-
-    .btn-contacto {
-      background: transparent;
-      border: 1px solid var(--gris-borde);
-      color: var(--blanco-apagado);
-      font-family: 'Barlow', sans-serif;
-      font-size: 13px;
-      padding: 6px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .btn-contacto:hover {
-      border-color: var(--dorado);
-      color: var(--dorado);
-    }
-
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(135deg, var(--carbon) 0%, #0f1a0f 50%, var(--carbon) 100%);
-      padding: 48px 24px 40px;
-      text-align: center;
-      border-bottom: 1px solid var(--gris-borde);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(232,184,75,0.06) 0%, transparent 70%);
-    }
-
-    .hero h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(36px, 8vw, 72px);
-      letter-spacing: 6px;
-      color: var(--blanco);
-      line-height: 0.9;
-      position: relative;
-    }
-
-    .hero h1 span {
-      color: var(--dorado);
-    }
-
-    .hero-sub {
-      margin-top: 12px;
-      font-size: 14px;
-      color: var(--blanco-apagado);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      position: relative;
-    }
-
-    .hero-divider {
-      width: 60px;
-      height: 2px;
-      background: var(--dorado);
-      margin: 16px auto;
-    }
-
-    .actualizado-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(232,184,75,0.1);
-      border: 1px solid rgba(232,184,75,0.3);
-      color: var(--dorado);
-      font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      position: relative;
-    }
-
-    .dot-live {
-      width: 6px;
-      height: 6px;
-      background: #4caf50;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    /* ── BUSCADOR ── */
-    .search-bar {
-      padding: 20px 24px;
-      background: var(--carbon);
-      border-bottom: 1px solid var(--gris-borde);
-    }
-
-    .search-input-wrap {
-      max-width: 600px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .search-input-wrap input {
-      width: 100%;
-      background: var(--gris-oscuro);
-      border: 1px solid var(--gris-borde);
-      color: var(--blanco);
-      font-family: 'Barlow', sans-serif;
-      font-size: 15px;
-      padding: 12px 44px 12px 16px;
-      border-radius: 6px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .search-input-wrap input:focus {
-      border-color: var(--dorado);
-    }
-
-    .search-input-wrap input::placeholder {
-      color: var(--blanco-apagado);
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--blanco-apagado);
-      font-size: 18px;
-      pointer-events: none;
-    }
-
-    /* ── FILTROS ── */
-    .filtros-wrap {
-      padding: 16px 24px;
-      background: var(--carbon);
-      border-bottom: 1px solid var(--gris-borde);
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .filtros {
-      display: flex;
-      gap: 8px;
-      width: max-content;
-    }
-
-    .filtro-btn {
-      background: var(--gris-oscuro);
-      border: 1px solid var(--gris-borde);
-      color: var(--blanco-apagado);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 7px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .filtro-btn:hover {
-      border-color: var(--dorado);
-      color: var(--dorado);
-    }
-
-    .filtro-btn.activo {
-      background: var(--dorado);
-      border-color: var(--dorado);
-      color: var(--negro);
-    }
-
-    /* ── CONTENIDO ── */
-    .contenido {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 32px 24px 60px;
-    }
-
-    /* ── SECCIÓN CATEGORÍA ── */
-    .seccion {
-      margin-bottom: 48px;
-    }
-
-    .seccion-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .seccion-titulo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 3px;
-      color: var(--blanco);
-    }
-
-    .seccion-icono {
-      font-size: 28px;
-    }
-
-    .seccion-linea {
-      flex: 1;
-      height: 1px;
-      background: var(--gris-borde);
-    }
-
-    .seccion-count {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      color: var(--blanco-apagado);
-      letter-spacing: 1px;
-    }
-
-    /* ── GRID DE PRODUCTOS ── */
-    .productos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--gris-oscuro);
-      border: 1px solid var(--gris-borde);
-      border-radius: 8px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-      cursor: default;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: var(--dorado);
-      box-shadow: 0 4px 20px rgba(232,184,75,0.12);
-    }
-
-    .card-categoria {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--dorado);
-    }
-
-    .card-nombre {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--blanco);
-      line-height: 1.2;
-    }
-
-    .card-precios {
-      margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .precio-unidad {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .precio-label {
-      font-size: 11px;
-      color: var(--blanco-apagado);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .precio-valor {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px;
-      letter-spacing: 1px;
-      color: var(--blanco);
-      background: var(--gris-medio);
-      padding: 2px 10px;
-      border-radius: 4px;
-      border-left: 3px solid var(--dorado);
-    }
-
-    .no-results {
-      text-align: center;
-      padding: 60px 24px;
-      color: var(--blanco-apagado);
-    }
-
-    .no-results p {
-      font-size: 18px;
-      margin-top: 8px;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--carbon);
-      border-top: 2px solid var(--dorado);
-      padding: 28px 24px;
-      text-align: center;
-    }
-
-    .footer-nombre {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 4px;
-      color: var(--blanco);
-    }
-
-    .footer-info {
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--blanco-apagado);
-      line-height: 1.8;
-    }
-
-    .footer-info a {
-      color: var(--dorado);
-      text-decoration: none;
-    }
-
-    .footer-legal {
-      margin-top: 16px;
-      font-size: 11px;
-      color: #555;
-    }
-
-    @media (max-width: 600px) {
-      header { padding: 14px 16px; }
-      .logo-nombre { font-size: 22px; }
-      .hero { padding: 32px 16px 28px; }
-      .contenido { padding: 24px 16px 48px; }
-      .filtros-wrap { padding: 12px 16px; }
-      .search-bar { padding: 14px 16px; }
-      .productos-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
-      .precio-valor { font-size: 22px; }
-    }
+    @media (max-width: 600px) { .productos-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
   </style>
 </head>
 <body>
@@ -446,20 +74,15 @@
 
 <div class="hero">
   <h1>CATÁLOGO<br><span>DE PRECIOS</span></h1>
-  <div class="hero-divider"></div>
-  <p class="hero-sub">Precios mayoristas actualizados</p>
-  <div style="margin-top:16px">
-    <span class="actualizado-badge">
-      <span class="dot-live"></span>
-      <span id="fecha-update">Actualizando...</span>
-    </span>
+  <div class="actualizado-badge">
+    <span class="dot-live"></span>
+    <span id="fecha-update">Cargando...</span>
   </div>
 </div>
 
 <div class="search-bar">
   <div class="search-input-wrap">
-    <input type="text" id="buscador" placeholder="Buscá un producto... (ej: Corona, Coca, Fernet)" autocomplete="off">
-    <span class="search-icon">🔍</span>
+    <input type="text" id="buscador" placeholder="Buscá un producto... (ej: Corona, Coca, Fernet)">
   </div>
 </div>
 
@@ -481,103 +104,87 @@
 </div>
 
 <div class="contenido" id="contenido">
-  <p style="text-align: center; padding: 40px;">Cargando catálogo...</p>
+  <p style="text-align: center;">Sincronizando con inventario...</p>
 </div>
 
 <footer>
-  <div class="footer-nombre">La Bodeguita de Saraza</div>
-  <div class="footer-info">
-    📍 Saraza 5077, CABA &nbsp;·&nbsp;
-    📱 <a href="https://wa.me/5491171005183">11 7100-5183</a>
-  </div>
-  <div class="footer-legal">Precios en pesos argentinos · Sujetos a cambios sin previo aviso · Solo venta mayorista</div>
+  <p><strong>La Bodeguita de Saraza</strong> · CABA · 📱 11 7100-5183</p>
+  <p style="color: #555; margin-top: 10px;">Precios sujetos a cambios sin previo aviso · Solo venta mayorista</p>
 </footer>
 
 <script>
-// ── ESTADO GLOBAL ──
 let PRODUCTOS = [];
 let catActiva = 'todos';
 let busqueda = '';
 
-// ── CARGA DINÁMICA DESDE EL JSON DE n8n ──
 async function cargarDatos() {
   try {
-    // Buscamos el archivo actualizado por n8n en el repo (cache-busting para evitar precios viejos)
     const response = await fetch('./precios.json?v=' + new Date().getTime());
     const datosNuevos = await response.json();
     
-    // Mapeamos los datos del Excel al formato del frontend
-    // Nota: Aquí podrías agregar lógica para autodetectar la categoría
-    PRODUCTOS = datosNuevos.map(p => ({
-      id: p.codigo,
-      cat: "Cervezas", // Por ahora asignamos una por defecto
-      nombre: p.descripcion,
-      precio_unidad: p.precio_venta
-    }));
+    PRODUCTOS = datosNuevos.map(p => {
+      const desc = p.descripcion.toLowerCase();
+      let cat = "Otros";
+
+      if (/(cerveza|porron|lata|corona|brahma|quilmes|stella|heineken|andes|miller|schneider|imperial|isenbeck|warsteiner|bieckert|palermo|skol|munich|361)/.test(desc)) cat = "Cervezas";
+      else if (/(coca|sprite|fanta|pepsi|7up|paso de los toros|mirinda|manaos|gaseosa|cunnington|levite|baggio|cepita|aquarius|placer|ades|jugo)/.test(desc)) cat = "Gaseosas";
+      else if (/(agua|villavicencio|glaciar|bidon|soda|eco de los andes|sierra de los padres|arroyito|cimes)/.test(desc)) cat = "Aguas";
+      else if (/(vino|malbec|cabernet|chardonnay|syrah|merlot|espumante|chandon|trumpeter|rutini|nicasia|alamos|alma mora|dada|benjamin|colon|finca|enemigo|pispi)/.test(desc)) cat = "Vinos";
+      else if (/(whisky|black label|red label|jack daniels|chivas|ballentines|jameson|old parr|white horse|moray|monkey shoulder|famous)/.test(desc)) cat = "Whisky";
+      else if (/(fernet|branca|1882|buhero)/.test(desc)) cat = "Fernet";
+      else if (/(gin|beefeater|tanqueray|bombay|heredero|aconcagua|merle|restinga|brighton|spirito)/.test(desc)) cat = "Gin";
+      else if (/(vodka|absolut|smirnoff|sernova|skyy|nikov|maleficio|bar vodka)/.test(desc)) cat = "Vodka";
+      else if (/(speed|monster|energizante|red bull|red raven)/.test(desc)) cat = "Energizantes";
+      else if (/(licor|baileys|jager|amarula|campari|aperol|cinzano|gancia|cynar|martini|amaretto|sheridan|tambo|tia maria|3 plumas|cusenier)/.test(desc)) cat = "Licores";
+      else if (/(alfajor|papas|snack|lays|doritos|chetos|mani|marroc|bon o bon|oreo|pepitos|nachos|toddy|mantecol|don satur|pringles)/.test(desc)) cat = "Snacks";
+
+      return { id: p.codigo, cat: cat, nombre: p.descripcion, precio_unidad: p.precio_venta };
+    });
 
     render();
     actualizarFecha();
   } catch (error) {
-    console.error("Error cargando precios:", error);
-    document.getElementById('contenido').innerHTML = `
-      <div class="no-results">
-        <p>⚠️ Error al sincronizar precios.</p>
-        <p style="font-size: 14px; margin-top: 10px;">Por favor, verifique su conexión o intente más tarde.</p>
-      </div>`;
+    document.getElementById('contenido').innerHTML = "<div class='no-results'>⚠️ Error al cargar precios.</div>";
   }
 }
 
-// ── UTILS ──
-const fmt = n => n ? '$' + Number(n).toLocaleString('es-AR') : null;
+const fmt = n => n ? '$' + Number(n).toLocaleString('es-AR') : '-';
 
-// ── RENDERIZADO ──
 function render() {
   const contenido = document.getElementById('contenido');
-  
-  // Filtrado lógico
   let filtrados = PRODUCTOS.filter(p => {
     const matchCat = catActiva === 'todos' || p.cat === catActiva;
-    const matchBusq = busqueda === '' || 
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase());
-    return matchCat && matchBusq && p.precio_unidad !== null;
+    const matchBusq = p.nombre.toLowerCase().includes(busqueda.toLowerCase());
+    return matchCat && matchBusq;
   });
 
   if (filtrados.length === 0) {
-    contenido.innerHTML = `<div class="no-results"><div style="font-size:48px">🔍</div><p>No encontramos productos para "<strong>${busqueda}</strong>"</p></div>`;
+    contenido.innerHTML = `<div class="no-results">🔍 No se encontraron productos.</div>`;
     return;
   }
 
-  // Agrupar por categoría para el diseño de secciones
   const porCategoria = {};
   filtrados.forEach(p => {
     if (!porCategoria[p.cat]) porCategoria[p.cat] = [];
     porCategoria[p.cat].push(p);
   });
 
-  const iconos = { 
-    'Cervezas': '🍺', 'Gaseosas': '🥤', 'Aguas': '💧', 'Vinos': '🍷', 
-    'Whisky': '🥃', 'Fernet': '🍶', 'Gin': '🍸', 'Vodka': '🍹' 
-  };
+  const iconos = { 'Cervezas': '🍺', 'Gaseosas': '🥤', 'Aguas': '💧', 'Vinos': '🍷', 'Whisky': '🥃', 'Fernet': '🍶', 'Gin': '🍸', 'Vodka': '🍹', 'Energizantes': '⚡', 'Licores': '🍾', 'Snacks': '🍫', 'Otros': '📦' };
 
-  contenido.innerHTML = Object.entries(porCategoria).map(([cat, prods]) => `
+  contenido.innerHTML = Object.entries(porCategoria).sort().map(([cat, prods]) => `
     <div class="seccion">
       <div class="seccion-header">
-        <span class="seccion-icono">${iconos[cat] || '📦'}</span>
+        <span style="font-size:24px">${iconos[cat] || '📦'}</span>
         <h2 class="seccion-titulo">${cat.toUpperCase()}</h2>
         <div class="seccion-linea"></div>
-        <span class="seccion-count">${prods.length} productos</span>
+        <span style="font-size:12px; color:var(--blanco-apagado)">${prods.length} productos</span>
       </div>
       <div class="productos-grid">
         ${prods.map(p => `
           <div class="card">
             <div class="card-categoria">${cat}</div>
             <div class="card-nombre">${p.nombre}</div>
-            <div class="card-precios">
-              <div class="precio-unidad">
-                <span class="precio-label">Precio</span>
-                <span class="precio-valor">${fmt(p.precio_unidad)}</span>
-              </div>
-            </div>
+            <div class="precio-valor">${fmt(p.precio_unidad)}</div>
           </div>
         `).join('')}
       </div>
@@ -585,14 +192,11 @@ function render() {
   `).join('');
 }
 
-// ── GESTIÓN DE FECHA ──
 function actualizarFecha() {
-  const ahora = new Date();
-  const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
-  document.getElementById('fecha-update').textContent = 'Actualizado: ' + ahora.toLocaleDateString('es-AR', opciones);
+  const opciones = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+  document.getElementById('fecha-update').textContent = 'Actualizado: ' + new Date().toLocaleDateString('es-AR', opciones);
 }
 
-// ── EVENTOS DE INTERFAZ ──
 document.getElementById('filtros').addEventListener('click', e => {
   if (!e.target.classList.contains('filtro-btn')) return;
   document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
@@ -611,9 +215,7 @@ document.getElementById('buscador').addEventListener('input', e => {
   render();
 });
 
-// ── INICIALIZACIÓN ──
 cargarDatos();
 </script>
-
 </body>
 </html>
