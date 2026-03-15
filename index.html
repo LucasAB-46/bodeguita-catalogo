@@ -120,9 +120,12 @@ let busqueda = '';
 async function cargarDatos() {
   try {
     const response = await fetch('./precios.json?v=' + new Date().getTime());
-    const datosNuevos = await response.json();
+    const data = await response.json();
     
-    PRODUCTOS = datosNuevos.map(p => {
+    // CORRECCIÓN: Accedemos a la propiedad que definimos en n8n
+    const listaFinal = data.lista_productos ? data.lista_productos : data;
+
+    PRODUCTOS = listaFinal.map(p => {
       const desc = p.descripcion.toLowerCase();
       let cat = "Otros";
 
@@ -144,6 +147,7 @@ async function cargarDatos() {
     render();
     actualizarFecha();
   } catch (error) {
+    console.error("Error:", error);
     document.getElementById('contenido').innerHTML = "<div class='no-results'>⚠️ Error al cargar precios.</div>";
   }
 }
