@@ -1,0 +1,55 @@
+[
+  {
+    "content": {
+      "name": "precios.json",
+      "path": "precios.json",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/contents/precios.json?ref=main",
+      "html_url": "https://github.com/LucasAB-46/bodeguita-catalogo/blob/main/precios.json",
+      "git_url": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "download_url": "https://raw.githubusercontent.com/LucasAB-46/bodeguita-catalogo/main/precios.json",
+      "type": "file",
+      "_links": {
+        "self": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/contents/precios.json?ref=main",
+        "git": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "html": "https://github.com/LucasAB-46/bodeguita-catalogo/blob/main/precios.json"
+      }
+    },
+    "commit": {
+      "sha": "442ac7e2887a68fc5a4072986c9c4086531e61f4",
+      "node_id": "C_kwDORjh6Z9oAKDQ0MmFjN2UyODg3YTY4ZmM1YTQwNzI5ODZjOWM0MDg2NTMxZTYxZjQ",
+      "url": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/git/commits/442ac7e2887a68fc5a4072986c9c4086531e61f4",
+      "html_url": "https://github.com/LucasAB-46/bodeguita-catalogo/commit/442ac7e2887a68fc5a4072986c9c4086531e61f4",
+      "author": {
+        "name": "LucasAB-46",
+        "email": "lucasarielbejarano@gmail.com",
+        "date": "2026-03-16T01:25:32Z"
+      },
+      "committer": {
+        "name": "LucasAB-46",
+        "email": "lucasarielbejarano@gmail.com",
+        "date": "2026-03-16T01:25:32Z"
+      },
+      "tree": {
+        "sha": "02e02ff67e7d3bde075ce63cd8f02fb57a42b074",
+        "url": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/git/trees/02e02ff67e7d3bde075ce63cd8f02fb57a42b074"
+      },
+      "message": "Actualizar precios desde Excel",
+      "parents": [
+        {
+          "sha": "d0711f9be1ceecf7c824447112607bb11d0bd4d7",
+          "url": "https://api.github.com/repos/LucasAB-46/bodeguita-catalogo/git/commits/d0711f9be1ceecf7c824447112607bb11d0bd4d7",
+          "html_url": "https://github.com/LucasAB-46/bodeguita-catalogo/commit/d0711f9be1ceecf7c824447112607bb11d0bd4d7"
+        }
+      ],
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    }
+  }
+]
