@@ -121,34 +121,41 @@ async function cargarDatos() {
   try {
     const response = await fetch('./precios.json?v=' + new Date().getTime());
     const data = await response.json();
-    
-    // CORRECCIÓN: Accedemos a la propiedad que definimos en n8n
-    const listaFinal = data.lista_productos ? data.lista_productos : data;
 
-    PRODUCTOS = listaFinal.map(p => {
-      const desc = p.descripcion.toLowerCase();
-      let cat = "Otros";
+    // Compatible con array directo O con { lista_productos: [...] }
+    const listaFinal = Array.isArray(data) ? data : (data.lista_productos || []);
 
-      if (/(cerveza|porron|lata|corona|brahma|quilmes|stella|heineken|andes|miller|schneider|imperial|isenbeck|warsteiner|bieckert|palermo|skol|munich|361)/.test(desc)) cat = "Cervezas";
-      else if (/(coca|sprite|fanta|pepsi|7up|paso de los toros|mirinda|manaos|gaseosa|cunnington|levite|baggio|cepita|aquarius|placer|ades|jugo)/.test(desc)) cat = "Gaseosas";
-      else if (/(agua|villavicencio|glaciar|bidon|soda|eco de los andes|sierra de los padres|arroyito|cimes)/.test(desc)) cat = "Aguas";
-      else if (/(vino|malbec|cabernet|chardonnay|syrah|merlot|espumante|chandon|trumpeter|rutini|nicasia|alamos|alma mora|dada|benjamin|colon|finca|enemigo|pispi)/.test(desc)) cat = "Vinos";
-      else if (/(whisky|black label|red label|jack daniels|chivas|ballentines|jameson|old parr|white horse|moray|monkey shoulder|famous)/.test(desc)) cat = "Whisky";
-      else if (/(fernet|branca|1882|buhero)/.test(desc)) cat = "Fernet";
-      else if (/(gin|beefeater|tanqueray|bombay|heredero|aconcagua|merle|restinga|brighton|spirito)/.test(desc)) cat = "Gin";
-      else if (/(vodka|absolut|smirnoff|sernova|skyy|nikov|maleficio|bar vodka)/.test(desc)) cat = "Vodka";
-      else if (/(speed|monster|energizante|red bull|red raven)/.test(desc)) cat = "Energizantes";
-      else if (/(licor|baileys|jager|amarula|campari|aperol|cinzano|gancia|cynar|martini|amaretto|sheridan|tambo|tia maria|3 plumas|cusenier)/.test(desc)) cat = "Licores";
-      else if (/(alfajor|papas|snack|lays|doritos|chetos|mani|marroc|bon o bon|oreo|pepitos|nachos|toddy|mantecol|don satur|pringles)/.test(desc)) cat = "Snacks";
+    PRODUCTOS = listaFinal
+      .filter(p => p && p.descripcion)
+      .map(p => {
+        const desc = (p.descripcion || '').toLowerCase();
+        let cat = "Otros";
 
-      return { id: p.codigo, cat: cat, nombre: p.descripcion, precio_unidad: p.precio_venta };
-    });
+        if (/(cerveza|porron|corona|brahma|quilmes|stella|heineken|andes|miller|schneider|imperial|isenbeck|warsteiner|bieckert|palermo|skol|munich|361|patagonia|antares|baba|salta|grolsch|kunstmann|norte|lit rubia|blue moon|michelob|amstel|budweiser|bud |1882 lata|1890)/.test(desc)) cat = "Cervezas";
+        else if (/(coca|sprite|fanta|pepsi|seven|paso de los toros|mirinda|manaos|gaseosa|cunnington|levite|baggio|cepita|aquarius|placer|ades|jugo torasso|villa del sur|soda|tonica|powerade|gatorade)/.test(desc)) cat = "Gaseosas";
+        else if (/(agua|villavicencio|glaciar|bidon|eco de los andes|sierra de los padres|arroyito|cimes)/.test(desc)) cat = "Aguas";
+        else if (/(malbec|cabernet|chardonnay|syrah|merlot|espumante|chandon|trumpeter|rutini|nicasia|alamos|alma mora|dada|benjamin|colon selecto|finca mendel|enemigo|pispi|norton|balbo|quara|lluvia negra|la faustina|muñeco rebelde|novecento|termidor|viñas de|zuccardi|luigi bosca|saint felicien|angelica zapata|navarro correas|baron b|mumm|salentein|rs brut|liason|nieto senetiner|sapo|perro callejero|renaissance|federico|new age|vino|rose|blanc|tinto|blanco dulce|torrontes|chenin|pinot)/.test(desc)) cat = "Vinos";
+        else if (/(whisky|whiskey|black label|red label|jack daniel|chivas|ballentine|jameson|old parr|white horse|glen moray|glenlivet|monkey shoulder|famous grouse|vat 69|jb |benchmark|buffalo trace|fireball|tullamore|buchanans|jim beam|wild turkey|woodford|dewars|blenders pride|hiram walker)/.test(desc)) cat = "Whisky";
+        else if (/(fernet|branca|buhero|1882)/.test(desc)) cat = "Fernet";
+        else if (/(gin|beefeater|tanqueray|bombay|heredero|aconcagua|merle|restinga|brighton|spirito|gordon|bulldog|heraclito|cefiro|el profeta|amazonian|bosque|principe de los apostoles|legui|ginebra)/.test(desc)) cat = "Gin";
+        else if (/(vodka|absolut|smirnoff|sernova|skyy|nikov|maleficio|bar vodka|dr lemon|wyborowa)/.test(desc)) cat = "Vodka";
+        else if (/(speed|monster|energizante|red raven)/.test(desc)) cat = "Energizantes";
+        else if (/(licor|baileys|jagermeister|jager|amarula|campari|aperol|cinzano|gancia|cynar|martini|amaretto|sheridans|tambo|tia maria|tres plumas|cusenier|malibu|holdmoser|ron |cachaza|bacardi|havana|flor de caña|capel|pisco|tequila|caña |coñac|cocobongo|granadina|hesperidina|carpano|licor 43|frangelico|cointreau|limoncello|wild africa)/.test(desc)) cat = "Licores";
+        else if (/(alfajor|papas|lays|doritos|chetos|mani|marroc|oreo|pepitos|toddy|mantecol|don satur|pringles|guaymallen|chocolate block|bombom|palito|cereal|capricho|magic |arco iris|samba|dinamita|keops|gold dulce|crema chant|lungo|banana joe|oso bomb|mix frutos|alfajor helado|gula|rasta|marley|frutos secos|pehuamar|twistos|3d queso|bocadito)/.test(desc)) cat = "Snacks";
+
+        return {
+          id: p.codigo,
+          cat: cat,
+          nombre: p.descripcion,
+          precio_unidad: p.precio_venta
+        };
+      });
 
     render();
     actualizarFecha();
   } catch (error) {
-    console.error("Error:", error);
-    document.getElementById('contenido').innerHTML = "<div class='no-results'>⚠️ Error al cargar precios.</div>";
+    console.error("Error al cargar precios:", error);
+    document.getElementById('contenido').innerHTML = "<div class='no-results'>⚠️ Error al cargar precios. Intentá recargar la página.</div>";
   }
 }
 
@@ -158,7 +165,7 @@ function render() {
   const contenido = document.getElementById('contenido');
   let filtrados = PRODUCTOS.filter(p => {
     const matchCat = catActiva === 'todos' || p.cat === catActiva;
-    const matchBusq = p.nombre.toLowerCase().includes(busqueda.toLowerCase());
+    const matchBusq = (p.nombre || '').toLowerCase().includes(busqueda.toLowerCase());
     return matchCat && matchBusq;
   });
 
@@ -173,9 +180,19 @@ function render() {
     porCategoria[p.cat].push(p);
   });
 
-  const iconos = { 'Cervezas': '🍺', 'Gaseosas': '🥤', 'Aguas': '💧', 'Vinos': '🍷', 'Whisky': '🥃', 'Fernet': '🍶', 'Gin': '🍸', 'Vodka': '🍹', 'Energizantes': '⚡', 'Licores': '🍾', 'Snacks': '🍫', 'Otros': '📦' };
+  const iconos = {
+    'Cervezas': '🍺', 'Gaseosas': '🥤', 'Aguas': '💧', 'Vinos': '🍷',
+    'Whisky': '🥃', 'Fernet': '🍶', 'Gin': '🍸', 'Vodka': '🍹',
+    'Energizantes': '⚡', 'Licores': '🍾', 'Snacks': '🍫', 'Otros': '📦'
+  };
 
-  contenido.innerHTML = Object.entries(porCategoria).sort().map(([cat, prods]) => `
+  const ordenCategorias = ['Cervezas', 'Gaseosas', 'Aguas', 'Vinos', 'Whisky', 'Fernet', 'Gin', 'Vodka', 'Energizantes', 'Licores', 'Snacks', 'Otros'];
+
+  const entradasOrdenadas = ordenCategorias
+    .filter(cat => porCategoria[cat])
+    .map(cat => [cat, porCategoria[cat]]);
+
+  contenido.innerHTML = entradasOrdenadas.map(([cat, prods]) => `
     <div class="seccion">
       <div class="seccion-header">
         <span style="font-size:24px">${iconos[cat] || '📦'}</span>
