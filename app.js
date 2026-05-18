@@ -1,20 +1,18 @@
-<<<<<<< HEAD
 async function cargarCatalogo() {
   try {
-    // IMPORTANTE: Asegurate de que el archivo se llame productos.json 
-    // como lo configuramos en n8n
+    // Buscamos el archivo generado por n8n
     const res = await fetch('productos.json'); 
     const productos = await res.json();
 
     const main = document.getElementById('catalogo');
-    main.innerHTML = ''; // Limpiamos por si acaso
+    main.innerHTML = ''; // Limpiamos el contenedor
     
     if (!productos || productos.length === 0) {
       main.innerHTML = '<p class="cargando">No hay productos disponibles.</p>';
       return;
     }
 
-    // Fecha de actualización
+    // Mostrar fecha de actualización
     const fechaEl = document.createElement('p');
     fechaEl.className = 'actualizado';
     fechaEl.textContent = `Última actualización: ${new Date().toLocaleDateString('es-AR')}`;
@@ -27,8 +25,8 @@ async function cargarCatalogo() {
       const card = document.createElement('div');
       card.className = 'card';
       
-      // Lógica de imagen: si existe p.imagen, creamos el tag <img>
-      // Asumimos que las fotos están en una carpeta llamada 'images' en tu GitHub
+      // Armamos la ruta hacia tu carpeta local 'images'
+      // Si la foto no existe en la carpeta, 'onerror' hace que no se muestre el cuadro roto
       const imagenHTML = p.imagen 
         ? `<img src="images/${p.imagen}" alt="${p.descripcion}" class="producto-img" onerror="this.style.display='none'">` 
         : '';
@@ -51,7 +49,5 @@ async function cargarCatalogo() {
   }
 }
 
+// Ejecutamos la función al cargar la página
 cargarCatalogo();
-=======
-// Lógica incorporada en index.html
->>>>>>> a559a90dbde0a570372438a7843917a19aa2c591
